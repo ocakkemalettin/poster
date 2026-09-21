@@ -10,6 +10,7 @@ type LoadTestMap = Arc<Mutex<HashMap<String, LoadTestHandle>>>;
 #[derive(Debug, Clone, Serialize)]
 pub struct LoadTestStats {
     pub completed: u64,
+    pub total: u64,
     pub successes: u64,
     pub failures: u64,
     pub avg_ms: f64,
@@ -50,6 +51,7 @@ impl LoadTestHandle {
     pub fn stats(&self) -> LoadTestStats {
         LoadTestStats {
             completed: self.completed.load(Ordering::Relaxed),
+            total: self.total,
             successes: self.successes.load(Ordering::Relaxed),
             failures: self.failures.load(Ordering::Relaxed),
             avg_ms: 0.0,
@@ -399,6 +401,7 @@ pub async fn spawn_load_test(
                         let (avg, p95) = tracker2.lock().unwrap().snapshot();
                         let stats = LoadTestStats {
                             completed: done,
+                            total,
                             successes: successes2.load(Ordering::Relaxed),
                             failures: failures2.load(Ordering::Relaxed),
                             avg_ms: avg,

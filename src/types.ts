@@ -92,6 +92,7 @@ export interface CurlImportResult {
 
 export interface LoadTestStats {
   completed: number;
+  total: number;
   successes: number;
   failures: number;
   avg_ms: number;
