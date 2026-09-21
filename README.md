@@ -5,6 +5,7 @@ A desktop API testing tool built with [Tauri v2](https://tauri.app), React 19, T
 ## Prerequisites
 
 - **Rust** (stable toolchain) — https://rustup.rs
+  - Verify it's on your PATH in the terminal you'll use: `rustc --version` and `cargo --version`. If they're not recognized, install Rust via rustup and **restart your terminal**.
 - **Node.js** (v20 or newer recommended) — https://nodejs.org
 - Platform-specific build dependencies for Tauri:
   - **Linux**: `libwebkit2gtk-4.1-dev`, `build-essential`, `curl`, `wget`, `file`, `libssl-dev`, `libayatana-appindicator3-dev`, `librsvg2-dev` (see [Tauri Linux prerequisites](https://tauri.app/start/prerequisites/))
@@ -17,6 +18,33 @@ git clone https://github.com/ocakkemalettin/poster.git
 cd poster
 npm install
 ```
+
+### Verifying your toolchain before building
+
+The Tauri CLI shells out to `cargo` during builds. If you see an error like
+`failed to run cargo metadata command`, the CLI couldn't find or run `cargo`. Check:
+
+1. **Rust is on PATH in this terminal** — open a new terminal and run:
+   ```sh
+   rustc --version
+   cargo --version
+   ```
+2. **Cargo actually works** (from anywhere, not just the project):
+   ```sh
+   cargo metadata --format-version 1 > /dev/null   # Linux/macOS
+   cargo metadata --format-version 1 > $null       # Windows PowerShell
+   ```
+3. **VS Code integrated terminals inherit your PATH** — if `cargo` works in a normal terminal but not inside VS Code, restart VS Code (or select the default shell profile).
+4. **Windows-specific gotchas**:
+   - Install the C++ Build Tools with the **"Desktop development with C++"** workload.
+   - Make sure the repo is **not inside OneDrive** — move it to a plain path like `D:\code\poster`.
+   - Exclude the project folder and `%USERPROFILE%\.cargo` from antivirus scanning if you get odd failures.
+5. **Isolate Rust vs Tauri** — run cargo directly in the backend:
+   ```sh
+   cd src-tauri
+   cargo check
+   ```
+   If this fails, fix your Rust toolchain first; if it passes but `npm run tauri build` still fails, re-run the build from the same terminal where `cargo --version` works. For more detail: `npm run tauri build -- --verbose`.
 
 ## Running in development
 
